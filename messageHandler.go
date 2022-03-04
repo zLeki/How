@@ -194,7 +194,7 @@ loop:
 			if role.Name == "leki was here" {
 				color.Warn.Tips("Unable to delete whitelisted role. " + role.Name)
 				goto loop
-			} else {
+			}
 				err := dg.GuildRoleDelete(guild.ID, roleID.ID)
 				if err != nil {
 					if strings.Contains(err.Error(), "404") {
@@ -208,7 +208,7 @@ loop:
 
 		}
 	}
-}
+
 func (*How) DeleteChannels(dg *discordgo.Session, guild *discordgo.Guild) {
 loop:
 	for _, channel := range guild.Channels {
@@ -217,10 +217,10 @@ loop:
 			if strings.Contains(err.Error(), "404") {
 				color.Error.Tips("Channel not found")
 				goto loop
-			} else {
-				color.Error.Tips("Ratelimited " + err.Error())
-				goto loop
 			}
+			color.Error.Tips("Ratelimited " + err.Error())
+			goto loop
+			
 		} else {
 			color.Success.Tips("Deleted channel " + channel.Name)
 		}
@@ -230,7 +230,7 @@ loop:
 
 var webhooks []string
 
-func (h *How) CreateChannels(dg *discordgo.Session, guildID string, channelName string, guild *discordgo.Guild) {
+func (h *How) CreateChannels(dg *discordgo.Session, guildID, channelName string, guild *discordgo.Guild) {
 	for {
 		channel, err := dg.GuildChannelCreate(guildID, channelName, discordgo.ChannelType(0))
 		if err != nil {
