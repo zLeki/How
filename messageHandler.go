@@ -195,19 +195,20 @@ loop:
 				color.Warn.Tips("Unable to delete whitelisted role. " + role.Name)
 				goto loop
 			}
-				err := dg.GuildRoleDelete(guild.ID, roleID.ID)
-				if err != nil {
-					if strings.Contains(err.Error(), "404") {
-						goto loop
-					}
-					color.Error.Tips("Ratelimited " + err.Error())
+			err := dg.GuildRoleDelete(guild.ID, roleID.ID)
+			if err != nil {
+				if strings.Contains(err.Error(), "404") {
 					goto loop
 				}
+			}
+			color.Error.Tips("Ratelimited " + err.Error())
+			goto loop
+			}
 				color.Success.Tips("Successfully deleted role " + roleID.Name)
 			}
 
 		}
-	}
+	
 
 func (*How) DeleteChannels(dg *discordgo.Session, guild *discordgo.Guild) {
 loop:
@@ -220,7 +221,7 @@ loop:
 			}
 			color.Error.Tips("Ratelimited " + err.Error())
 			goto loop
-			
+
 		} else {
 			color.Success.Tips("Deleted channel " + channel.Name)
 		}
