@@ -30,12 +30,11 @@ func (h *How) Menu(dg *discordgo.Session) {
 	`)
 	input := bufio.NewReader(os.Stdin)
 	text, _ := input.ReadString('\n')
-	switch text {
-	case "1":
+	if strings.HasPrefix(text, "1") {
 		color.Info.Tips("Simply choose one of the options.")
 		time.Sleep(time.Second * 3)
 		goto restart
-	case "4":
+	} else if strings.HasPrefix(text, "4") {
 		color.Question.Tips("What guild are you trying to delete roles in?")
 		guilds := dg.State.Guilds
 		for _, guild := range guilds {
@@ -61,7 +60,7 @@ func (h *How) Menu(dg *discordgo.Session) {
 		for i := 0; i < 250; i++ {
 			go DeleteRoles(dg, guildz)
 		}
-	case "2":
+	} else if strings.HasPrefix(text, "2") {
 		color.Question.Tips("What guild are you trying to create channels in?")
 		guilds := dg.State.Guilds
 		for _, guild := range guilds {
@@ -91,7 +90,7 @@ func (h *How) Menu(dg *discordgo.Session) {
 			go DeleteRoles(dg, guildz)
 			go SpamRoles(dg, guildz)
 		}
-	case "7":
+	}else if strings.HasPrefix(text, "7") {
 		color.Question.Tips("What guild are you trying to spam roles in?")
 		guilds := dg.State.Guilds
 		for _, guild := range guilds {
@@ -117,7 +116,7 @@ func (h *How) Menu(dg *discordgo.Session) {
 			go SpamRoles(dg, guildz)
 		}
 
-	case "3":
+	}else if strings.HasPrefix(text, "3") {
 		color.Question.Tips("What guild are you trying to ban all in?")
 		guilds := dg.State.Guilds
 		for _, guild := range guilds {
@@ -138,8 +137,7 @@ func (h *How) Menu(dg *discordgo.Session) {
 
 			go h.BanAll(dg, guildz)
 		}
-	case "6":
-		
+	}else if strings.HasPrefix(text, "6") {
 		color.Question.Tips("What guild are you trying to delete all channels in?")
 		guilds := dg.State.Guilds
 		for _, guild := range guilds {
