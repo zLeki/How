@@ -2,12 +2,13 @@ package main
 
 import (
 	"fmt"
-	"github.com/bwmarrin/discordgo"
-	"github.com/joho/godotenv"
 	"log"
 	"os"
 	"os/signal"
 	"syscall"
+
+	"github.com/bwmarrin/discordgo"
+	"github.com/joho/godotenv"
 )
 
 type How struct {
@@ -51,7 +52,7 @@ func main() {
 	<-ch
 
 }
-func (c *How) startLoggers() (*log.Logger, *log.Logger) {
+func (*How) startLoggers() (*log.Logger, *log.Logger) {
 	errorLog := log.New(os.Stderr, "ERROR: ", log.Ldate|log.Ltime|log.Lshortfile)
 	infoLog := log.New(os.Stdout, "INFO: ", log.Ldate|log.Ltime|log.Lshortfile)
 	return infoLog, errorLog
